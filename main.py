@@ -1,5 +1,6 @@
 def FromDecimal(number=1,base=2, main_base = 10):
     result = ''
+    #изначальный словарь
     alphabet_base = {
         '0': '0',
         '1': '1',
@@ -19,18 +20,25 @@ def FromDecimal(number=1,base=2, main_base = 10):
         '15': 'F'
         }    
     alphabet = {}
-    i = main_base-1
+    i = base-1
+    #создаём новый словарь, операясь на СЧ, в которую конвертируем
     while i != -1 :
         alphabet[str(i)] = alphabet_base[str(i)]
-        i -= 1
+        i -= 1   
+
+    alphabet_base.clear() #очищаем не нужный словарь 
 
     while number > 0:
             #для шестнадцатеричной СЧ используем словарь
             result = alphabet[str(int(number) % base)] + result
             number //= base
+
+    alphabet.clear() #очищаем не нужный словарь        
+
     return result
 
 def ToDecimal(number='101',base=2):
+    #изначальный словарь
     alphabet_letters = {
         15: 'F',
         14: 'E',
@@ -51,16 +59,18 @@ def ToDecimal(number='101',base=2):
         }        
     dict_base = {}
     i = base-1
+    #создаём новый словарь, операясь на СЧ, в которую конвертируем
     while i != -1 :
         dict_base[str(i)] = alphabet_letters[i]
         i -= 1
+    #меняем местами ключи и их значения    
     alphabet=dict([val,key] for key,val in dict_base.items())    
 
     result = 0
     len_number = len(number)-1
     number = str(number)
     while number.isalnum():
-        #формула для перевода в десятиричную СЧ (для шестнадцатеричной СЧ используем словарь)
+        #формула для перевода в десятиричную СЧ
         result = int(alphabet[number[0:1]]) * pow(base,len_number) + result
         len_number -=1
         number = number[1:]
@@ -92,8 +102,7 @@ def iscorrect_number(number):
 
 def main():
 
-
-    print('Number system you can choose: \n 2 - 16')
+    print('Number system you can choose: 2 - 16')
 
     base = int(input("Enter the number system to convert: "))
     #проверка на соответсвие в списке допустимых значений
@@ -103,7 +112,7 @@ def main():
 
     main_base = int(input("Enter the main number system: "))
     #проверка на соответсвие в списке допустимых значений
-    while not 2 <= main_base <= 16:
+    while not 2 <= main_base <= 16 or main_base == base:
         print('Write a correct system!')
         main_base = int(input("Enter the main number system:: "))
 
@@ -126,13 +135,13 @@ def main():
         number = number
     elif str(number).find(',') != -1:
         number = number.replace(',', '.')
-    elif main_base <=16:
+    elif 11 <= main_base <= 16:
         number = number    
     else:             
         number = int(number)            
 
     #выбор кол-во знаков в дробной части
-    if str(number).find('.') != -1 and 10 < base <= 16:
+    if str(number).find('.') != -1 and base <= 10:
         round_frac = input('Enter what number to round up to: ') 
         while not round_frac.isdigit():
             print('Enter a correct number!')
